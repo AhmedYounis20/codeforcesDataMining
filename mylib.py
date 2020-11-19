@@ -76,6 +76,7 @@ class get_all:
 
         self.unsolved_problem=list()
         self.tryed_problem=0
+        self.unsolvedids=[]
         self.solved_tages=list()
 
         for i in self.problemfile:
@@ -105,7 +106,7 @@ class get_all:
                     if (i['problem'] in self.unsolved_problem): self.unsolved_problem.remove(i['problem'])
 
                 else:
-                    if i['problem'] not in self.unsolved_problem:
+                    if i['problem'] not in self.unsolved_problem and i['author']['participantType']=='PRACTICE':
                         self.unsolved_problem.append(i['problem'])
         for i in self.problemfile:
             if i['verdict']=='OK' and i["author"]['participantType']=="PRACTICE":
@@ -161,7 +162,7 @@ class get_all:
             datediffernce=datetime.datetime.now()-datetime.datetime.fromtimestamp(i['creationTimeSeconds'])
             if datediffernce.days<=6:
                 self.phase1.append(i)
-            elif datediffernce.days>6 and datediffernce.days<=13:
+            elif datediffernce.days>6 and datediffernce.days<14:
                 self.phase2.append(i)
             elif datediffernce.days>13 and datediffernce.days<=20:
                 self.phase3.append(i)
@@ -170,26 +171,91 @@ class get_all:
         self.phase1_submitions=len(self.phase1)
         self.phase1_accepted=list()
         self.phase1_ids=list()
+        self.phase1_accepted_ids=list()
         self.phase1_max_rated_problem=0
+        self.phase1_av=0
+        self.phase1_av_count=0
         self.phase1_max_problem=dict()
         self.phase1_solved=list()
         self.phase1_average=0
+        self.phase1_virtual_count=0
+        self.phase1_contestids=[]
+        self.phase1_contestcount=0
+        self.phase1_virtualids=[]
         for problem in self.phase1:
+            if ( problem['id'] not in self.phase1_accepted_ids )  and problem['verdict']=="OK":
+                self.phase1_solved+=[problem]
+                if problem['author']['participantType']=='VIRTUAL' and problem['contestId'] not in self.phase1_virtualids:
+                    self.phase1_virtual_count+=1
+                    self.phase1_virtualids+=[problem['contestId']]
+                if problem['author']['participantType']=='CONTESTANT' and problem['contestId'] not in self.phase1_contestids:
+                    self.phase1_contestcount+=1
+                    self.phase1_contestids+=[problem['contestId']]
+                if problem['author']['participantType'] != 'VIRTUAL':
+                    if self.phase1_max_rated_problem < problem['author']['rating'] and problem['author']['participantType']=='PRACTICE' :
+                        self.phase1_max_rated_problem=problem['author']['rating']
+                    self.phase1_av+=problem['author']['rating']
+                    self.phase1_av_count += 1
+        if ( self.phase1_av_count>0):self.phase1_av/=self.phase1_av_count
+    def phase2_info(self):
+        self.phase2_submitions=len(self.phase2)
+        self.phase2_accepted=list()
+        self.phase2_ids=list()
+        self.phase2_accepted_ids=list()
+        self.phase2_max_rated_problem=0
+        self.phase2_av=0
+        self.phase2_av_count=0
+        self.phase2_max_problem=dict()
+        self.phase2_solved=list()
+        self.phase2_average=0
+        self.phase2_virtual_count=0
+        self.phase2_contestids=[]
+        self.phase2_contestcount=0
+        self.phase2_virtualids=[]
+        for problem in self.phase2:
+            if ( problem['id'] not in self.phase2_accepted_ids )  and problem['verdict']=="OK":
+                self.phase2_accepted_ids+=[problem['id']]
+                self.phase2_solved+=[problem]
+                if problem['author']['participantType']=='VIRTUAL' and problem['contestId'] not in self.phase2_virtualids:
+                    self.phase2_virtual_count+=1
+                    self.phase2_virtualids+=[problem['contestId']]
+                if problem['author']['participantType']=='CONTESTANT' and problem['contestId'] not in self.phase2_contestids:
+                    self.phase2_contestcount+=1
+                    self.phase2_contestids+=[problem['contestId']]
+                if problem['author']['participantType'] != 'VIRTUAL':
+                    if self.phase2_max_rated_problem < problem['author']['rating'] and problem['author']['participantType']=='PRACTICE' :
+                        self.phase2_max_rated_problem=problem['author']['rating']
+                    self.phase2_av+=problem['author']['rating']
+                    self.phase2_av_count += 1
+        if ( self.phase2_av_count>0):self.phase2_av/=self.phase2_av_count
+    def phase3_info(self):
+        self.phase3_submitions=len(self.phase3)
+        self.phase3_accepted=list()
+        self.phase3_ids=list()
+        self.phase3_accepted_ids=list()
+        self.phase3_max_rated_problem=0
+        self.phase3_av=0
+        self.phase3_av_count=0
+        self.phase3_max_problem=dict()
+        self.phase3_solved=list()
+        self.phase3_average=0
+        self.phase3_virtual_count=0
+        self.phase3_contestids=[]
+        self.phase3_contestcount=0
 
-            if problem not in self.phase1_accepted and problem['verdict']=="OK" and problem["author"]['participantType']=="PRACTICE":
-                self.phase1_accepted.append(problem)
-                if problem['id'] not in self.phase1_ids:
-                    self.phase1_ids.append(problem['id'])
-        for problem in self.phase1_accepted:
-            if (problem["problem"]["rating"] >self.phase1_max_rated_problem):
-                self.phase1_max_rated_problem=problem['problem']['rating']
-                self.phase1_max_problem=problem
-        for id in self.phase1_ids:
-            for problem in self.phase1_accepted:
-                if id==problem['id']:
-                    self.phase1_solved.append(problem)
-                    break
-
-        for problem in self.phase1_solved:
-            self.phase1_average+=problem['problem']['rating']
-        self.phase1_average/=len(self.phase1_solved)
+        self.phase3_virtualids=[]
+        for problem in self.phase3:
+            if ( problem['id'] not in self.phase3_accepted_ids )  and problem['verdict']=="OK":
+                self.phase3_solved+=[problem]
+                if problem['author']['participantType']=='VIRTUAL' and problem['contestId'] not in self.phase3_virtualids:
+                    self.phase3_virtual_count+=1
+                    self.phase3_virtualids+=[problem['contestId']]
+                if problem['author']['participantType']=='CONTESTANT' and problem['contestId'] not in self.phase3_contestids:
+                    self.phase3_contestcount+=1
+                    self.phase3_contestids+=[problem['contestId']]
+                if problem['author']['participantType'] != 'VIRTUAL':
+                    if self.phase3_max_rated_problem < problem['author']['rating'] and problem['author']['participantType']=='PRACTICE' :
+                        self.phase3_max_rated_problem=problem['author']['rating']
+                    self.phase3_av+=problem['author']['rating']
+                    self.phase3_av_count += 1
+        if ( self.phase3_av_count>0):self.phase3_av/=self.phase3_av_count

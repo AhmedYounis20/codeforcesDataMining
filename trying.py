@@ -77,13 +77,16 @@ a=get_all('amy2532001')
 a.get_problem()
 a.get_probelms_for_phase()
 a.phase1_info()
-for i in a.phase1:
+a.phase2_info()
+'''for i in a.phase1:
     print(i)
     print("-------------------\n")
 print('#######################')
 for i  in a.phase1_solved:
     print(i)
     print("-------------------\n")
-print("**********************\n",a.phase1_average)
-
-
+try:print("**********************\n",a.phase1_average)
+except: print('********************\n')'''
+for i in a.phase2_solved:
+    print(i)
+    print('*************************')
