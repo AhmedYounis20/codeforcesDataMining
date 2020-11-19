@@ -523,7 +523,7 @@ def frame3():
     getting_handle.pack()
     getting_handle.place(relx=0.25,rely=0.15,height=25)
 
-    go_BUTTON=Button(F3,text='GO',width=30,height=5,bg='brown',command=lambda:weekly_rateing('amy2532001'))
+    go_BUTTON=Button(F3,text='GO',width=30,height=5,bg='brown',command=lambda:weekly_rateing(getting_handle.get()))
     go_BUTTON.pack()
     go_BUTTON.place(relx=0.4,rely=0.4)
     F3.pack(expand=1,fill='y')

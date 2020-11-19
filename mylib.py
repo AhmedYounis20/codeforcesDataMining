@@ -192,8 +192,8 @@ class get_all:
                     self.phase1_contestcount+=1
                     self.phase1_contestids+=[problem['contestId']]
                 if problem['author']['participantType'] != 'VIRTUAL':
-                    if self.phase1_max_rated_problem < problem['author']['rating'] and problem['author']['participantType']=='PRACTICE' :
-                        self.phase1_max_rated_problem=problem['author']['rating']
+                    if self.phase1_max_rated_problem < problem['problem']['rating'] and problem['author']['participantType']=='PRACTICE' :
+                        self.phase1_max_rated_problem=problem['problem']['rating']
                     self.phase1_av+=problem['author']['rating']
                     self.phase1_av_count += 1
         if ( self.phase1_av_count>0):self.phase1_av/=self.phase1_av_count
