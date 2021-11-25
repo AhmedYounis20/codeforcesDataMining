@@ -13,14 +13,14 @@
 #
 from tkinter import *
 import webbrowser
-from  urllib.request import urlopen,urlretrieve
+from  urllib.request import urlopen
 from urllib.error import URLError,HTTPError
 from json import loads
-import wget
+import requests
+import shutil
 from PIL import ImageTk,Image
 from tkscrolledframe import ScrolledFrame
-import sqlite3
-from mylib import *
+from mylib import get_all
 from os import system
 #####################################################(search class) #################################
 '''class get_all: 
@@ -50,7 +50,12 @@ def search_result( handle ):##### pop up of search window
         ##############################################################################
         info_fr = Frame(inner_frame, height=350, width=490, background="#231e1e")
         account.get_info()
-        image = wget.download("http:"+str(account.image))
+        
+        downloaded_avatar = requests.get(account.image, stream=True,headers={'User-agent': 'Mozilla/5.0'})
+        if downloaded_avatar.status_code == 200:
+            with open(account.image.split('/')[-1], 'wb') as f:
+                downloaded_avatar.raw.decode_content = True
+                shutil.copyfileobj(downloaded_avatar.raw, f)
         image=ImageTk.PhotoImage(size=20,image=Image.open(account.image.split('/')[-1]))
         # l = Button(info_fr,image=image).place(rely=0)
         picture= Label(info_fr, image=image).place(rely=0.25,relx=0.05)
@@ -172,6 +177,7 @@ def search_result( handle ):##### pop up of search window
         warnning.title('warnning')
         l = Label(warnning,text="please check internet",font=('arial',20),fg='red',bg='gray').pack()
         warnning.mainloop()
+    return account
 ####################
 def compare_result(handle1,handle2):
     #url = "https://userpic.codeforces.com/591099/avatar/e5d251220ca54303.jpg"
@@ -190,7 +196,11 @@ def compare_result(handle1,handle2):
         inner_compare_frame.config(background="black", )
         ##############################################              1           ###########################################################
         info1_fr=Frame(inner_compare_frame,width=390,height=250,bg="#231e1e",)
-        image = wget.download("http:" + str(account1.image))
+        downloaded_avatar = requests.get(account1.image, stream=True,headers={'User-agent': 'Mozilla/5.0'})
+        if downloaded_avatar.status_code == 200:
+            with open(account1.image.split('/')[-1], 'wb') as f:
+                downloaded_avatar.raw.decode_content = True
+                shutil.copyfileobj(downloaded_avatar.raw, f)        
         image = ImageTk.PhotoImage(size=20, image=Image.open(account1.image.split('/')[-1]))
         # l = Button(info1_fr,image=image).place(rely=0)
         picture = Label(info1_fr, image=image).place(rely=0.25,relx=0.05)
@@ -207,7 +217,11 @@ def compare_result(handle1,handle2):
         info1_fr.grid(column=0,row=0,pady=1,padx=1)
                                         ####################2#################
         info2_fr=Frame(inner_compare_frame,width=390,height=250,bg="#231e1e",)
-        image2 = wget.download("http:" + str(account2.image))
+        downloaded_avatar = requests.get(account2.image, stream=True,headers={'User-agent': 'Mozilla/5.0'})
+        if downloaded_avatar.status_code == 200:
+            with open(account2.image.split('/')[-1], 'wb') as f:
+                downloaded_avatar.raw.decode_content = True
+                shutil.copyfileobj(downloaded_avatar.raw, f)        
         image2= ImageTk.PhotoImage(size=20, image=Image.open(account2.image.split('/')[-1]))
         # l = Button(info2_fr,image=image).place(rely=0)
         picture = Label(info2_fr, image=image2).place(rely=0.25,relx=0.05)
@@ -350,11 +364,13 @@ def compare_result(handle1,handle2):
         un1= Label(unsolved1_fr, text='unsolved:', font=('arial',20),bg="#231e1e",fg='red' ).place(rely=0.0,relx=0)
         j=0
         for problem in account1.unsolved_problem:
-            Button(unsolved1_fr, text=str(problem['index']) + '-' + str(problem['contestId']),bg='brown',
-                   command=lambda: serach_problem(problem['index'], problem['contestId'])).place(y=0.4 * i*10,relx=0.5*j)
-            if j==1: j=-1
+            Button(unsolved1_fr,bg='brown',text=str(problem['index'])+'-'+str(problem['contestId']),command=lambda:serach_problem(problem['index'],problem['contestId'])).place(rely=0.05*i,relx=0.5*j)
+            if j==1:
+                j=-1
+            if j==-1:   
+                i+=3
+
             j+=1
-            if j==0:i += 1
         unsolved1_fr.grid(row=6,column=0,  pady=1, padx=1)
                                                 ####################################
         unsolved2_fr=Frame(inner_compare_frame,width=390,height=30*max(len(account1.unsolved_problem),len(account2.unsolved_problem))/1.5+40,bg="#231e1e",)
@@ -364,11 +380,13 @@ def compare_result(handle1,handle2):
         un2= Label(unsolved2_fr, text='unsolved:', font=('arial',20),bg="#231e1e",fg='red' ).place(rely=0.0,relx=0)
         j=0
         for problem in account2.unsolved_problem:
-            Button(unsolved2_fr, bg='brown',text=str(problem['index']) + '-' + str(problem['contestId']),
-                   command=lambda: serach_problem(problem['index'], problem['contestId'])).place(y=0.4* i*10,relx=0.5*j)
-            if j==1: j = -1
-            j += 1
-            if j==0:i += 5
+            Button(unsolved2_fr,bg='brown',text=str(problem['index'])+'-'+str(problem['contestId']),command=lambda:serach_problem(problem['index'],problem['contestId'])).place(rely=0.05*i,relx=0.5*j)
+            if j==1:
+                j=-1
+            if j==-1:
+                i+=3
+
+            j+=1
         unsolved2_fr.grid(row=6,column=1,  pady=1, padx=1)
 
         compare_window.mainloop()
@@ -408,7 +426,11 @@ def weekly_rateing(handle_for_rate):
                                 ##############################################
         info_fr = Frame(inner_week_frame, height=350, width=490, background="#231e1e")
         phase.get_info()
-        image = wget.download("http:" + str(phase.image))
+        downloaded_avatar = requests.get(phase.image, stream=True,headers={'User-agent': 'Mozilla/5.0'})
+        if downloaded_avatar.status_code == 200:
+            with open(phase.image.split('/')[-1], 'wb') as f:
+                downloaded_avatar.raw.decode_content = True
+                shutil.copyfileobj(downloaded_avatar.raw, f)  
         image = ImageTk.PhotoImage(size=20, image=Image.open(phase.image.split('/')[-1]))
         # l = Button(info_fr,image=image).place(rely=0)
         picture = Label(info_fr, image=image).place(rely=0.25, relx=0.05)
@@ -540,7 +562,7 @@ if __name__=="__main__":
     w.configure(background="#231e1e")
     h=w.winfo_screenheight()
     d=w.winfo_screenwidth()
-    w.iconbitmap("code.ico")
+    w.iconbitmap('code.ico')
     # img = Image("photo", file="codeforces-telegram-square.png")
     # w.tk.call('wm','iconphoto',w._w, img)
     ####################################################

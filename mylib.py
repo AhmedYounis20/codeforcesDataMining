@@ -191,11 +191,11 @@ class get_all:
                 if problem['author']['participantType']=='CONTESTANT' and problem['contestId'] not in self.phase1_contestids:
                     self.phase1_contestcount+=1
                     self.phase1_contestids+=[problem['contestId']]
-                if problem['author']['participantType'] != 'VIRTUAL':
-                    if self.phase1_max_rated_problem < problem['problem']['rating'] and problem['author']['participantType']=='PRACTICE' :
-                        self.phase1_max_rated_problem=problem['problem']['rating']
-                    self.phase1_av+=problem['author']['rating']
-                    self.phase1_av_count += 1
+                # if problem['author']['participantType'] != 'VIRTUAL':
+                #     if self.phase1_max_rated_problem < problem['problem']['rating'] and problem['author']['participantType']=='PRACTICE' :
+                #         self.phase1_max_rated_problem=problem['problem']['rating']
+                #     self.phase1_av+=problem['author']['rating']
+                #     self.phase1_av_count += 1
         if ( self.phase1_av_count>0):self.phase1_av/=self.phase1_av_count
     def phase2_info(self):
         self.phase2_submitions=len(self.phase2)
@@ -222,11 +222,11 @@ class get_all:
                 if problem['author']['participantType']=='CONTESTANT' and problem['contestId'] not in self.phase2_contestids:
                     self.phase2_contestcount+=1
                     self.phase2_contestids+=[problem['contestId']]
-                if problem['author']['participantType'] != 'VIRTUAL':
-                    if self.phase2_max_rated_problem < problem['author']['rating'] and problem['author']['participantType']=='PRACTICE' :
-                        self.phase2_max_rated_problem=problem['author']['rating']
-                    self.phase2_av+=problem['author']['rating']
-                    self.phase2_av_count += 1
+                # if problem['author']['participantType'] != 'VIRTUAL':
+                #     if self.phase2_max_rated_problem < problem['author']['rating'] and problem['author']['participantType']=='PRACTICE' :
+                #         self.phase2_max_rated_problem=problem['author']['rating']
+                #     self.phase2_av+=problem['author']['rating']
+                #     self.phase2_av_count += 1
         if ( self.phase2_av_count>0):self.phase2_av/=self.phase2_av_count
     def phase3_info(self):
         self.phase3_submitions=len(self.phase3)
@@ -253,9 +253,9 @@ class get_all:
                 if problem['author']['participantType']=='CONTESTANT' and problem['contestId'] not in self.phase3_contestids:
                     self.phase3_contestcount+=1
                     self.phase3_contestids+=[problem['contestId']]
-                if problem['author']['participantType'] != 'VIRTUAL':
-                    if self.phase3_max_rated_problem < problem['author']['rating'] and problem['author']['participantType']=='PRACTICE' :
-                        self.phase3_max_rated_problem=problem['author']['rating']
-                    self.phase3_av+=problem['author']['rating']
-                    self.phase3_av_count += 1
+                # if problem['author']['participantType'] != 'VIRTUAL':
+                #     if self.phase3_max_rated_problem < problem['author']['rating'] and problem['author']['participantType']=='PRACTICE' :
+                #         self.phase3_max_rated_problem=problem['author']['rating']
+                #     self.phase3_av+=problem['author']['rating']
+                #     self.phase3_av_count += 1
         if ( self.phase3_av_count>0):self.phase3_av/=self.phase3_av_count
